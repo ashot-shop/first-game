@@ -12,30 +12,29 @@ def draw_menu():
     screen.blit(game_button, game_button_rect)  # Draw the GAME button
     screen.blit(exit_button, exit_button_rect)  # Draw the EXIT button
 
-image_path = '/data/data/org.test.myapp/files/app/'
 
 clock = pygame.time.Clock()
 pygame.init()
 screen = pygame.display.set_mode((675, 385))
 pygame.display.set_caption("SCOOL")
-icon = pygame.image.load(image_path + "=3/icon.png").convert_alpha()
+icon = pygame.image.load("=3/icon.png").convert_alpha()
 pygame.display.set_icon(icon)
 
-bg = pygame.image.load(image_path + "=3/background.jpg").convert_alpha()
-player = pygame.image.load(image_path + "=3/person/9.png").convert_alpha()
+bg = pygame.image.load( "=3/background.jpg").convert_alpha()
+player = pygame.image.load("=3/person/9.png").convert_alpha()
 walk_left = [
-    pygame.image.load(image_path + "=3/person/9.png").convert_alpha(),
-    pygame.image.load(image_path + "=3/person/10.png").convert_alpha(),
-    pygame.image.load(image_path + "=3/person/11.png").convert_alpha(),
-    pygame.image.load(image_path + "=3/person/12.png").convert_alpha(),
+    pygame.image.load("=3/person/9.png").convert_alpha(),
+    pygame.image.load( "=3/person/10.png").convert_alpha(),
+    pygame.image.load( "=3/person/11.png").convert_alpha(),
+    pygame.image.load( "=3/person/12.png").convert_alpha(),
 ]
 walk_right = [
-    pygame.image.load(image_path + "=3/person/5.png").convert_alpha(),
-    pygame.image.load(image_path + "=3/person/6.png").convert_alpha(),
-    pygame.image.load(image_path + "=3/person/7.png").convert_alpha(),
-    pygame.image.load(image_path + "=3/person/8.png").convert_alpha(),
+    pygame.image.load( "=3/person/5.png").convert_alpha(),
+    pygame.image.load( "=3/person/6.png").convert_alpha(),
+    pygame.image.load( "=3/person/7.png").convert_alpha(),
+    pygame.image.load( "=3/person/8.png").convert_alpha(),
 ]
-ghost = pygame.image.load(image_path + "=3/ghost.png").convert_alpha()
+ghost = pygame.image.load( "=3/ghost.png").convert_alpha()
 ghost_list_in_game = []
 
 player_anim_count = 0
@@ -48,13 +47,13 @@ player_y = 295
 is_jump = False
 jump_count = 8
 
-bg_sound = pygame.mixer.Sound(image_path + "sounds/bg.mp3")
+bg_sound = pygame.mixer.Sound( "sounds/bg.mp3")
 bg_sound.play(-1)
 
 ghost_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(ghost_timer, 4000)
 
-label = pygame.font.Font(image_path + "fonts/menu.ttf", 60)
+label = pygame.font.Font( "fonts/menu.ttf", 60)
 lose_label = label.render("LOSE", True, (193, 196, 199))
 restart_label = label.render("REPLAY", True, (115, 132, 148))
 restart_label_rect = restart_label.get_rect(topleft=(250, 200))
@@ -66,7 +65,7 @@ game_button_rect = game_button.get_rect(topleft=(250, 100))  # Position for GAME
 exit_button_rect = exit_button.get_rect(topleft=(250, 200))  # Position for EXIT button
 
 bullets_quantity = 5
-bullet = pygame.image.load(image_path + "=3/bullet.png").convert_alpha()
+bullet = pygame.image.load( "=3/bullet.png").convert_alpha()
 bullets = []
 
 gameplay = False  # Start with the menu
@@ -99,7 +98,7 @@ while running:
             screen.blit(walk_right[player_anim_count], (player_x, player_y))
             bg_x -= 2
         else:
-            screen.blit(pygame.image.load(image_path + "=3/person/13.png").convert_alpha(), (player_x, player_y))
+            screen.blit(pygame.image.load( "=3/person/13.png").convert_alpha(), (player_x, player_y))
 
         if keys[pygame.K_LEFT] and keys[pygame.K_SPACE]:
             bullet_shot()
