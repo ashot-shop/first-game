@@ -3,7 +3,7 @@ import pygame
 image_path = '/data/data/org.test.myapp/files/app/'
 
 clock = pygame.time.Clock()
-
+#Hello
 pygame.init()
 screen = pygame.display.set_mode((675,385))
 pygame.display.set_caption("SCOOL")#надпись сверху над игрой(ее название)
