@@ -78,43 +78,61 @@ while running:
         screen.blit(bg, (bg_x + 675, 0))
         screen.blit(bg, (bg_x - 675, 0))
         player_rect = walk_left[0].get_rect(topleft=(player_x, player_y))
+        def ghost_left():
+            global ghost_list_in_game
+            global player_anim_count
+            global ghost
+            global player_speed
+            global bg_sound
+            global gameplay
 
-        if ghost_list_in_game:
-            for (i, el) in enumerate(ghost_list_in_game):
-                screen.blit(ghost, el)
-                el.x -= 10
+            if ghost_list_in_game:
+                for (i, el) in enumerate(ghost_list_in_game):
+                    screen.blit(ghost, el)
+                    el.x -= 10
 
-                if el.x < -10:
-                    ghost_list_in_game.pop(i)
+                    if el.x < -10:
+                        ghost_list_in_game.pop(i)
 
-                if player_rect.colliderect(el):
-                    gameplay = False
-                    bg_sound.stop()
+                    if player_rect.colliderect(el):
+                        gameplay = False
+                        bg_sound.stop()
+        def player_movement():
+            global player_speed
+            global keys
+            global walk_left
+            global walk_right
+            global player_anim_count
+            global bg_x
+            if keys[pygame.K_LEFT]:
+                screen.blit(walk_left[player_anim_count], (player_x, player_y))
+                bg_x += 2
+            elif keys[pygame.K_RIGHT]:
+                screen.blit(walk_right[player_anim_count], (player_x, player_y))
+                bg_x -= 2
+            else:
+                screen.blit(pygame.image.load( "=3/person/13.png").convert_alpha(), (player_x, player_y))
 
-        if keys[pygame.K_LEFT]:
-            screen.blit(walk_left[player_anim_count], (player_x, player_y))
-            bg_x += 2
-        elif keys[pygame.K_RIGHT]:
-            screen.blit(walk_right[player_anim_count], (player_x, player_y))
-            bg_x -= 2
-        else:
-            screen.blit(pygame.image.load( "=3/person/13.png").convert_alpha(), (player_x, player_y))
+            if keys[pygame.K_LEFT] and keys[pygame.K_SPACE]:
+                bullet_shot()
+            elif keys[pygame.K_RIGHT] and keys[pygame.K_SPACE]:
+                bullet_shot()
 
-        if keys[pygame.K_LEFT] and keys[pygame.K_SPACE]:
-            bullet_shot()
-        elif keys[pygame.K_RIGHT] and keys[pygame.K_SPACE]:
-            bullet_shot()
+        def bullet_movement():
+            global player_anim_count
+            global bullet_rect
+            global bullet
+            
+            for bullet_rect in bullets:
+                screen.blit(bullet, bullet_rect)
+                bullet_rect.x += 10
 
-        for bullet_rect in bullets:
-            screen.blit(bullet, bullet_rect)
-            bullet_rect.x += 10
+                if bullet_rect.x > 675:
+                    bullets.remove(bullet_rect)
 
-            if bullet_rect.x > 675:
-                bullets.remove(bullet_rect)
-
-        player_anim_count += 0.5
-        if player_anim_count >= 4:
-            player_anim_count = 0
+            player_anim_count += 0.5
+            if player_anim_count >= 4:
+                player_anim_count = 0
 
         pygame.display.flip()
     else:
