@@ -54,15 +54,21 @@ def ghost_left():
 
 def bullet_shot():
     global bullets
-    global bullets_quantity    
-    bullets.append(bullet.get_rect(topleft = (player_x + 30, player_y + 10))) 
+    global bullets_quantity
+    bullets.append(bullet.get_rect(topleft = (player_x + 30, player_y + 10)))
     bullets_quantity -= 1
 
 def draw_menu():
-    screen.fill((87, 88, 89))  # Background color for the menu
-    screen.blit(menu_label, (250, 100))  # Draw the menu title
+    global bg_menu
+    global bg_menu_x
+
+    screen.blit(bg_menu, (0, 0))  # Background color for the menu
+    screen.blit(menu_label, (250, 50))  # Draw the menu title
+    screen.blit(button, (185, 198))
+    screen.blit(button, (180, 50))
     screen.blit(game_button, game_button_rect)  # Draw the GAME button
     screen.blit(exit_button, exit_button_rect)  # Draw the EXIT button
+
 
 
 clock = pygame.time.Clock()
@@ -113,24 +119,32 @@ restart_label_rect = restart_label.get_rect(topleft=(250, 200))
 menu_label = label.render("MENU", True, (255, 255, 255))  # Menu title
 game_button = label.render("GAME", True, (255, 255, 255))  # GAME button
 exit_button = label.render("EXIT", True, (255, 255, 255))  # EXIT button
-game_button_rect = game_button.get_rect(topleft=(250, 100))  # Position for GAME button
-exit_button_rect = exit_button.get_rect(topleft=(250, 200))  # Position for EXIT button
+game_button_rect = game_button.get_rect(topleft=(250, 150))  # Position for GAME button
+exit_button_rect = exit_button.get_rect(topleft=(265, 300))  # Position for EXIT button
 
 bullets_quantity = 5
 bullet = pygame.image.load( "=3/bullet.png").convert_alpha()
 bullets = []
 
+bg_menu = pygame.image.load("=3/bg_menu.jpg").convert_alpha()
+
+button = pygame.image.load( "=3/button2.png").convert_alpha()
+
 gameplay = False  # Start with the menu
 running = True
 while running:
     keys = pygame.key.get_pressed()
+    draw_menu()
 
+    screen.blit(button,(250,250))
     if gameplay:
         screen.blit(bg, (bg_x, 0))
         screen.blit(bg, (bg_x + 675, 0))
         screen.blit(bg, (bg_x - 675, 0))
-        player_rect = walk_left[0].get_rect(topleft=(player_x, player_y))
-
+        if gameplay:
+            player_rect = walk_left[0].get_rect(topleft=(player_x, player_y))
+            ghost_left()
+            player_movement()
 
 
         if keys[pygame.K_LEFT] and keys[pygame.K_UP]:
@@ -156,6 +170,8 @@ while running:
                 if game_button_rect.collidepoint(event.pos):
                     gameplay = True
                     bg_sound.play(-1)
+                    ghost_left()
+                    player_movement()
                 elif exit_button_rect.collidepoint(event.pos):
                     running = False
         if event.type == ghost_timer:
