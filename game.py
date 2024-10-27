@@ -12,7 +12,8 @@ def bullet_movement():
         if bullet_rect.x > 675:
             bullets.remove(bullet_rect)
 
-    player_anim_count += 0.5
+    player_anim_count += 0.5 # Должно быть целым числом (ты используешь его, как индекс для расчета кадра анимации)
+    # Почему у тебя кадр анимации ДВИЖЕНИЯ меняется только в функции выстрела?
     if player_anim_count >= 4:
         player_anim_count = 0
 
@@ -43,7 +44,7 @@ def ghost_left():
     if ghost_list_in_game:
         for (i, el) in enumerate(ghost_list_in_game):
             screen.blit(ghost, el)
-            el.x -= 10
+            el.x -= 5
 
             if el.x < -10:
                 ghost_list_in_game.pop(i)
