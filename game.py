@@ -14,9 +14,14 @@ def bullet_movement():
 
 def animation_count():
     global player_anim_count
-    player_anim_count += 1 
-    if player_anim_count >= 4:
-        player_anim_count = 0
+    global current_animation_frame
+    global animation_rate
+    current_animation_frame += 1
+    if current_animation_frame >= animation_rate:
+        current_animation_frame = 0
+        player_anim_count += 1 
+        if player_anim_count >= 4:
+            player_anim_count = 0
 
 def player_movement():
     global player_speed
@@ -99,6 +104,8 @@ ghost = pygame.image.load( "=3/ghost.png").convert_alpha()
 ghost_list_in_game = []
 
 player_anim_count = 0
+current_animation_frame = 0
+animation_rate = 10
 bg_x = 0
 
 player_speed = 5
