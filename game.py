@@ -23,16 +23,10 @@ def animation_count():
         if player_anim_count >= 4:
             player_anim_count = 0
 
-def player_movement():
-    global player_speed
-    global keys
-    global walk_left
-    global walk_right
-    global player_anim_count
-    global bg_x
+def player_jump():
     global is_jump
-    global jump_count
     global player_y
+    global jump_count
 
     if is_jump:
         if jump_count >= -8:
@@ -42,16 +36,26 @@ def player_movement():
         else:
             is_jump = False
             jump_count = 8  # Reset jump count once jump is complete
+
+def player_movement():
+    global player_speed
+    global keys
+    global walk_left
+    global walk_right
+    global player_anim_count
+    global bg_x
+    global player_y
+    global player_x
+
+    if keys[pygame.K_LEFT]:
+        screen.blit(walk_left[player_anim_count], (player_x, player_y))
+        bg_x += 2
+    elif keys[pygame.K_RIGHT]:
+        screen.blit(walk_right[player_anim_count], (player_x, player_y))
+        bg_x -= 2
     else:
-        if keys[pygame.K_LEFT]:
-            screen.blit(walk_left[player_anim_count], (player_x, player_y))
-            bg_x += 2
-        elif keys[pygame.K_RIGHT]:
-            screen.blit(walk_right[player_anim_count], (player_x, player_y))
-            bg_x -= 2
-        else:
-            screen.blit(pygame.image.load("=3/person/13.png").convert_alpha(), (player_x, player_y))
-        animation_count()
+        screen.blit(pygame.image.load("=3/person/13.png").convert_alpha(), (player_x, player_y))
+    animation_count()
 
 def ghost_left():
     global ghost_list_in_game
@@ -179,6 +183,7 @@ while running:
         if keys[pygame.K_SPACE]:
             if not is_jump:  # Only jump if not already jumping
                 is_jump = True
+                player_jump()    
 
 
 
