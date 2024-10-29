@@ -162,6 +162,19 @@ while running:
         elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
             bullet_shot()
 
+        if not is_jump:
+            if keys[pygame.K_SPACE]:
+                is_jump = True
+        else:
+            if jump_count >= -8:
+                if jump_count > 0:
+                    player_y -= (jump_count ** 2) / 2
+                else:
+                    player_y += (jump_count ** 2) / 2
+                jump_count -= 0.5
+            else:
+                is_jump = False
+                jump_count = 8
 
 
         pygame.display.flip()
