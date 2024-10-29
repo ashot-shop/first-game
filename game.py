@@ -30,15 +30,28 @@ def player_movement():
     global walk_right
     global player_anim_count
     global bg_x
-    if keys[pygame.K_LEFT]:
-        screen.blit(walk_left[player_anim_count], (player_x, player_y))
-        bg_x += 2
-    elif keys[pygame.K_RIGHT]:
-        screen.blit(walk_right[player_anim_count], (player_x, player_y))
-        bg_x -= 2
+    global is_jump
+    global jump_count
+    global player_y
+
+    if is_jump:
+        if jump_count >= -8:
+            neg = 1 if jump_count >= 0 else -1
+            player_y -= (jump_count ** 2) * 0.5 * neg  # Adjust jump height
+            jump_count -= 1
+        else:
+            is_jump = False
+            jump_count = 8  # Reset jump count once jump is complete
     else:
-        screen.blit(pygame.image.load( "=3/person/13.png").convert_alpha(), (player_x, player_y))
-    animation_count()
+        if keys[pygame.K_LEFT]:
+            screen.blit(walk_left[player_anim_count], (player_x, player_y))
+            bg_x += 2
+        elif keys[pygame.K_RIGHT]:
+            screen.blit(walk_right[player_anim_count], (player_x, player_y))
+            bg_x -= 2
+        else:
+            screen.blit(pygame.image.load("=3/person/13.png").convert_alpha(), (player_x, player_y))
+        animation_count()
 
 def ghost_left():
     global ghost_list_in_game
@@ -47,18 +60,20 @@ def ghost_left():
     global player_speed
     global bg_sound
     global gameplay
+    global player_y
 
     if ghost_list_in_game:
         for (i, el) in enumerate(ghost_list_in_game):
             screen.blit(ghost, el)
             el.x -= 5
 
+            # Check if the player is jumping over the ghost
+            if player_rect.colliderect(el) and not is_jump:
+                gameplay = False  # Player loses if not jumping
+                bg_sound.stop()
+
             if el.x < -10:
                 ghost_list_in_game.pop(i)
-
-            if player_rect.colliderect(el):
-                gameplay = False
-                bg_sound.stop()
 
 def bullet_shot():
     global bullets
@@ -161,6 +176,9 @@ while running:
             bullet_shot()
         elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
             bullet_shot()
+        if keys[pygame.K_SPACE]:
+            if not is_jump:  # Only jump if not already jumping
+                is_jump = True
 
 
 
