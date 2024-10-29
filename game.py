@@ -4,10 +4,19 @@ def bullet_movement():
     global player_anim_count
     global bullet_rect
     global bullet
+    global ghost_list_in_game  # Added to access ghosts
+    global gameplay  # Added to access gameplay
 
-    for bullet_rect in bullets:
+    for bullet_rect in bullets[:]:  # Iterate over a copy of the list
         screen.blit(bullet, bullet_rect)
         bullet_rect.x += 10
+
+        # Check for collision with ghosts
+        for ghost_rect in ghost_list_in_game[:]:  # Iterate over a copy of the list
+            if bullet_rect.colliderect(ghost_rect):
+                ghost_list_in_game.remove(ghost_rect)  # Remove the ghost
+                bullets.remove(bullet_rect)  # Remove the bullet
+                break  # Exit the loop after a collision
 
         if bullet_rect.x > 675:
             bullets.remove(bullet_rect)
@@ -61,10 +70,12 @@ def ghost_left():
                 bg_sound.stop()
 
 def bullet_shot():
+    global bullet
     global bullets
     global bullets_quantity
     bullets.append(bullet.get_rect(topleft = (player_x + 30, player_y + 10)))
     bullets_quantity -= 1
+
 
 def draw_menu():
     global bg_menu
@@ -132,9 +143,10 @@ exit_button = label.render("EXIT", True, (255, 255, 255))  # EXIT button
 game_button_rect = game_button.get_rect(topleft=(250, 150))  # Position for GAME button
 exit_button_rect = exit_button.get_rect(topleft=(265, 300))  # Position for EXIT button
 
-bullets_quantity = 5
+bullets_quantity = 100
 bullet = pygame.image.load( "=3/bullet.png").convert_alpha()
 bullets = []
+
 
 bg_menu = pygame.image.load("=3/bg_menu.jpg").convert_alpha()
 
@@ -155,11 +167,12 @@ while running:
             player_rect = walk_left[0].get_rect(topleft=(player_x, player_y))
             ghost_left()
             player_movement()
+            bullet_movement()
 
 
-        if keys[pygame.K_LEFT] and keys[pygame.K_UP]:
+        if keys[pygame.K_LEFT] and keys[pygame.K_UP] and bullets_quantity > 0:
             bullet_shot()
-        elif keys[pygame.K_RIGHT] and keys[pygame.K_UP]:
+        elif keys[pygame.K_RIGHT] and keys[pygame.K_UP] and bullets_quantity > 0:
             bullet_shot()
 
 
