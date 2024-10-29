@@ -4,6 +4,7 @@ def bullet_movement():
     global player_anim_count
     global bullet_rect
     global bullet
+    global is_bullet_fired
     global ghost_list_in_game  # Added to access ghosts
     global gameplay  # Added to access gameplay
 
@@ -16,10 +17,12 @@ def bullet_movement():
             if bullet_rect.colliderect(ghost_rect):
                 ghost_list_in_game.remove(ghost_rect)  # Remove the ghost
                 bullets.remove(bullet_rect)  # Remove the bullet
+                is_bullet_fired = False
                 break  # Exit the loop after a collision
 
         if bullet_rect.x > 675:
             bullets.remove(bullet_rect)
+            is_bullet_fired = False
 
 def animation_count():
     global player_anim_count
@@ -73,8 +76,11 @@ def bullet_shot():
     global bullet
     global bullets
     global bullets_quantity
-    bullets.append(bullet.get_rect(topleft = (player_x + 30, player_y + 10)))
-    bullets_quantity -= 1
+    global is_bullet_fired
+    if not is_bullet_fired:  # Only fire if no bullet is currently in the air
+        bullets.append(bullet.get_rect(topleft=(player_x + 30, player_y + 10)))
+        bullets_quantity -= 1
+        is_bullet_fired = True
 
 
 def draw_menu():
@@ -147,6 +153,7 @@ bullets_quantity = 100
 bullet = pygame.image.load( "=3/bullet.png").convert_alpha()
 bullets = []
 
+is_bullet_fired = False
 
 bg_menu = pygame.image.load("=3/bg_menu.jpg").convert_alpha()
 
