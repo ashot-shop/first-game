@@ -4,13 +4,14 @@ def bullet_movement():
     global player_anim_count
     global bullet_rect
     global bullet
+    global bullet_direction
     global is_bullet_fired
     global ghost_list_in_game  # Added to access ghosts
     global gameplay  # Added to access gameplay
 
     for bullet_rect in bullets[:]:  # Iterate over a copy of the list
         screen.blit(bullet, bullet_rect)
-        bullet_rect.x += 10
+        bullet_rect.x -= 10 if bullet_direction == 'left' else -10
 
         # Check for collision with ghosts
         for ghost_rect in ghost_list_in_game[:]:  # Iterate over a copy of the list
@@ -20,7 +21,7 @@ def bullet_movement():
                 is_bullet_fired = False
                 break  # Exit the loop after a collision
 
-        if bullet_rect.x > 675:
+        if bullet_rect.x < -10 or bullet_rect.x > 675:
             bullets.remove(bullet_rect)
             is_bullet_fired = False
 
@@ -72,13 +73,15 @@ def ghost_left():
                 gameplay = False
                 bg_sound.stop()
 
-def bullet_shot():
-    global bullet
+def bullet_shot(direction):
     global bullets
     global bullets_quantity
+    global bullet_direction
     global is_bullet_fired
     if not is_bullet_fired:  # Only fire if no bullet is currently in the air
-        bullets.append(bullet.get_rect(topleft=(player_x + 30, player_y + 10)))
+        bullet_rect = bullet.get_rect(topleft=(player_x + 30, player_y + 10))
+        bullet_direction = direction
+        bullets.append(bullet_rect)
         bullets_quantity -= 1
         is_bullet_fired = True
 
@@ -152,6 +155,7 @@ exit_button_rect = exit_button.get_rect(topleft=(265, 300))  # Position for EXIT
 bullets_quantity = 100
 bullet = pygame.image.load( "=3/bullet.png").convert_alpha()
 bullets = []
+bullet_direction = 'right'
 
 is_bullet_fired = False
 
@@ -177,10 +181,11 @@ while running:
             bullet_movement()
 
 
-        if keys[pygame.K_LEFT] and keys[pygame.K_UP] and bullets_quantity > 0:
-            bullet_shot()
-        elif keys[pygame.K_RIGHT] and keys[pygame.K_UP] and bullets_quantity > 0:
-            bullet_shot()
+        if keys[pygame.K_UP] and bullets_quantity > 0:
+            if keys[pygame.K_LEFT]:
+                bullet_shot('left')  # Fire bullet to the left
+            elif keys[pygame.K_RIGHT]:
+                bullet_shot('right')  # Fire bullet to the right
 
 
 
