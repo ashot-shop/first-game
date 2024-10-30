@@ -73,6 +73,8 @@ def ghost_left():
                 gameplay = False
                 bg_sound.stop()
                 ghost_list_in_game.pop(i)
+                menu_sound.play(-1)
+
 
 def bullet_shot(direction):
     global bullets
@@ -90,6 +92,7 @@ def bullet_shot(direction):
 def draw_menu():
     global bg_menu
     global bg_menu_x
+    global menu_sound
 
     screen.blit(bg_menu, (0, 0))  # Background color for the menu
     screen.blit(menu_label, (250, 50))  # Draw the menu title
@@ -97,6 +100,7 @@ def draw_menu():
     screen.blit(button, (180, 50))
     screen.blit(game_button, game_button_rect)  # Draw the GAME button
     screen.blit(exit_button, exit_button_rect)  # Draw the EXIT button
+
 
 
 
@@ -134,10 +138,13 @@ player_x = 150
 player_y = 295
 
 is_jump = False
-jump_count = 8
+jump_range = 24
+jump_count = jump_range
+
 
 bg_sound = pygame.mixer.Sound( "sounds/bg.mp3")
-bg_sound.play(-1)
+menu_sound = pygame.mixer.Sound( "sounds/menu.mp3")
+menu_sound.play(-1)
 
 ghost_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(ghost_timer, 4000)
@@ -192,15 +199,15 @@ while running:
             if keys[pygame.K_SPACE]:
                 is_jump = True
         else:
-            if jump_count >= -8:
+            if jump_count >= -jump_range:
                 if jump_count > 0:
-                    player_y -= (jump_count ** 2) / 2
+                    player_y -= ((jump_count / 4) ** 2) / 2
                 else:
-                    player_y += (jump_count ** 2) / 2
-                jump_count -= 0.5
+                    player_y += ((jump_count / 4) ** 2) / 2
+                jump_count -= 1
             else:
                 is_jump = False
-                jump_count = 8
+                jump_count = jump_range
 
 
         pygame.display.flip()
@@ -218,6 +225,7 @@ while running:
             else:
                 if game_button_rect.collidepoint(event.pos):
                     gameplay = True
+                    pygame.mixer.music.pause()
                     bg_sound.play(-1)
 
                 elif exit_button_rect.collidepoint(event.pos):
