@@ -72,6 +72,7 @@ def ghost_left():
             if player_rect.colliderect(el):
                 gameplay = False
                 bg_sound.stop()
+                ghost_list_in_game.pop(i)
 
 def bullet_shot(direction):
     global bullets
@@ -218,8 +219,7 @@ while running:
                 if game_button_rect.collidepoint(event.pos):
                     gameplay = True
                     bg_sound.play(-1)
-                    ghost_left()
-                    player_movement()
+
                 elif exit_button_rect.collidepoint(event.pos):
                     running = False
         if event.type == ghost_timer:
